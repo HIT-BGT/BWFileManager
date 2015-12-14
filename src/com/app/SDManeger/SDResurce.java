@@ -58,6 +58,7 @@ public class SDResurce extends BaseActivity {
 		sdFile = new SDFile();
 
 		SDpath = sdCardCheck.getSDCardDir();
+        Log.d("SDResource#onCreate", SDpath.getAbsolutePath());
 		reFleshView(SDpath);
 	}
 
@@ -242,8 +243,9 @@ public class SDResurce extends BaseActivity {
 	public void backEvent() {
 		temp = SDpath.getAbsolutePath();
 		Log.d("Back key pressed: ", temp);
-		if (temp.equals("/mnt/sdcard")) {   //这里改成什么就好了呢？调试看一下就知道啦！哈哈哈我好聪明
+		if (temp.equals("/storage/sdcard0")) {   //这里改成什么就好了呢？调试看一下就知道啦！哈哈哈我好聪明
 			finish();
+            return;
 		}
 		int lastFd = temp.lastIndexOf("/");
 		if (lastFd == -1) {

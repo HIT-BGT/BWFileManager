@@ -14,7 +14,7 @@ public class SDCardCheck {
 	private long nSDTotalSize;
 	private long nSDFreeSize;
 
-	public void SDCardCheck() {
+	public SDCardCheck() {
 		//获取外部存储设备的状态
 		String sDStateString = Environment.getExternalStorageState();
 

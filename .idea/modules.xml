@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SDResurceManeger.iml" filepath="$PROJECT_DIR$/SDResurceManeger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BWFileManager.iml" filepath="$PROJECT_DIR$/BWFileManager.iml" />
     </modules>
   </component>
 </project>
