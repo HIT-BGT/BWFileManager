@@ -34,7 +34,6 @@ public class SDResurce extends BaseActivity {
 	String temp;
 	ArrayList<HashMap<String, Object>> lstImageItem;
 	private GridView gridview;
-	private TextView textView;
 	private Button creat;
 	private Button search;
 	private Button back;
@@ -42,16 +41,16 @@ public class SDResurce extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);	//去标题
 		setContentView(R.layout.main);
 		gridview = (GridView) findViewById(R.id.gridview);
-		gridview.setOnItemClickListener(mGridViewItemClickListener);
-		gridview.setOnItemLongClickListener(mGridViewItemLongClickListener);
+		gridview.setOnItemClickListener(mGridViewItemClickListener);	//给grid中的每个item注册一个listener
+		gridview.setOnItemLongClickListener(mGridViewItemLongClickListener); //给grid中的每个item注册一个长时间按的listener
 		creat = (Button) findViewById(R.id.button1);
 		search = (Button) findViewById(R.id.button2);
 		back = (Button) findViewById(R.id.button3);
 
-		creat.setOnClickListener(new CreatListener());
+		creat.setOnClickListener(new CreateListener());
 		search.setOnClickListener(new searchListener());
 		back.setOnClickListener(new FlashListener());
 
@@ -61,19 +60,8 @@ public class SDResurce extends BaseActivity {
 		SDpath = sdCardCheck.getSDCardDir();
 		reFleshView(SDpath);
 	}
-	
-	
-	
 
-
-	private void setFleshView(ArrayList<HashMap<String, Object>> lst) {
-		SimpleAdapter saImageItems = new SimpleAdapter(this, lst,
-				R.layout.item, new String[] { "ItemImage", "ItemText" },
-				new int[] { R.id.ItemImage, R.id.ItemText });
-		gridview.setAdapter(saImageItems);
-
-	}
-
+	//得到view
 	private void reFleshView(File filePath) {
 		if (filePath != null) {
 			lstImageItem = sdFile.getFileList(filePath);
@@ -83,13 +71,23 @@ public class SDResurce extends BaseActivity {
 			setFleshView(lstImageItem);
 		}
 	}
+	//设置view
+	private void setFleshView(ArrayList<HashMap<String, Object>> lst) {
+		SimpleAdapter saImageItems = new SimpleAdapter(this, lst,
+				R.layout.item, new String[] { "ItemImage", "ItemText" },
+				new int[] { R.id.ItemImage, R.id.ItemText });
+		gridview.setAdapter(saImageItems);
 
-	private void creatFile(final String type) {
-		AlertDialog.Builder builder = new Builder(SDResurce.this);
-		final EditText editText = new EditText(SDResurce.this);
-		builder.setMessage("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½");
+	}
+
+
+	private void createFile(String type) {
+        //创建文件/文件夹
+		AlertDialog.Builder builder = new Builder(this);
+		final EditText editText = new EditText(this);   //用于输入文件名的输入框
+		builder.setMessage("请输入文件夹名：");
 		builder.setView(editText);
-		builder.setPositiveButton("È·ï¿½ï¿½", new OnClickListener() {
+		builder.setPositiveButton("确认", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -102,13 +100,13 @@ public class SDResurce extends BaseActivity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				} else if (type.equals("box")) {
+				} else if (type.equals("directory")) {
 					f.mkdir();
 				}
 				reFleshView(SDpath);
 			}
 		});
-		builder.setNegativeButton("È¡ï¿½ï¿½", new OnClickListener() {
+		builder.setNegativeButton("取消", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -119,41 +117,41 @@ public class SDResurce extends BaseActivity {
 		builder.create().show();
 	}
 
-	private void creatDialog() {
+	private void createDialog() {
+		//创建create时的对话框
 		AlertDialog.Builder builder = new Builder(this);
-		builder.setMessage("Ñ¡ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
-		builder.setTitle("ï¿½ï¿½Ê¾");
-		builder.setPositiveButton("ï¿½Ä¼ï¿½ï¿½ï¿½", new OnClickListener() {
+        builder.setTitle("提示");
+		builder.setMessage("创建");
+		builder.setPositiveButton("文件", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				creatFile("box");
-				dialog.dismiss();
+                dialog.dismiss();
+                createFile("file");
 			}
 		});
-		builder.setNegativeButton("ï¿½Ä¼ï¿½", new OnClickListener() {
+		builder.setNegativeButton("文件夹", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				creatFile("file");
+				createFile("directory");
 				Log.d("x", "casel");
 			}
 		});
 		builder.create().show();
 	}
 
-	private class CreatListener implements android.view.View.OnClickListener {
-
+	private class CreateListener implements View.OnClickListener {
+		//注册在”创建“按钮上的listener
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			Log.d("x", "in two");
-			creatDialog();
+			createDialog();
 		}
-
 	}
 
 	private class FlashListener implements android.view.View.OnClickListener {
-
+        //注册在”刷新“按钮上的listener
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -164,12 +162,12 @@ public class SDResurce extends BaseActivity {
 	}
 
 	private void searchDialog() {
+        //创建搜索对话框
 		AlertDialog.Builder builder = new Builder(SDResurce.this);
 		final EditText editText = new EditText(SDResurce.this);
-		builder.setMessage("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½");
+		builder.setMessage("请输入关键字：");
 		builder.setView(editText);
-		builder.setPositiveButton("È·ï¿½ï¿½", new OnClickListener() {
-	
+		builder.setPositiveButton("确认", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -178,7 +176,7 @@ public class SDResurce extends BaseActivity {
 				setFleshView(lstImageItem);
 			}
 		});
-		builder.setNegativeButton("È¡ï¿½ï¿½", new OnClickListener() {
+		builder.setNegativeButton("取消", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -190,7 +188,7 @@ public class SDResurce extends BaseActivity {
 	}
 
 	private class searchListener implements android.view.View.OnClickListener {
-
+        //注册在”搜索“按钮上的listener
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -198,87 +196,73 @@ public class SDResurce extends BaseActivity {
 		}
 	}
 
-	class backListener implements OnClickListener {
-
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
 	private GridView.OnItemClickListener mGridViewItemClickListener = new GridView.OnItemClickListener() {
+		//当某个文件/文件夹被点击时注册的listener
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			HashMap<String, Object> mf = lstImageItem.get(position);
+			HashMap<String, Object> mf = lstImageItem.get(position);    //position和item是怎么对应起来的（明白了）
+            Log.d("LstImageView", lstImageItem.toString());
+            Log.d("Item Position", String.valueOf(position));   //打印position
 			File f = new File(SDpath + File.separator
 					+ mf.get("ItemText").toString());
 			if (!f.exists())
 				return;
 			if (f.isDirectory()) {
-				SDpath = f;
+				SDpath = f; //如果是目录那么打开目录
 				reFleshView(f);
 			} else if (f.isFile()) {
-				startActivity(sdFile.openFile(f));
+				startActivity(sdFile.openFile(f));  //如果是文件那么打开文件
 			}
 
 		}
 	};
 
 	private GridView.OnItemLongClickListener mGridViewItemLongClickListener = new GridView.OnItemLongClickListener() {
-		public boolean onItemLongClick(AdapterView<?> parent, View view,
+		//长按某个item时注册的listener
+        public boolean onItemLongClick(AdapterView<?> parent, View view,
 				int position, long id) {
 			HashMap<String, Object> mf = lstImageItem.get(position);
 			File f = new File(SDpath + File.separator
 					+ mf.get("ItemText").toString());
-			Log.d("x", "long position and id is " + position + id);
-			Log.d("x", mf.get("ItemImage") + "long itemImage");
-			Log.d("x", mf.get("ItemText").toString() + "longa  absolutePath"
+			Log.d("longclick", "position and id is " + position + id);
+			Log.d("longclick", "long itemImage" + mf.get("ItemImage"));
+			Log.d("longclick", mf.get("ItemText").toString() + "Absolute Path:"
 					+ f.getAbsolutePath());
 			if (f.exists()) {
-				try {
-					Log.d("x", f.getCanonicalPath());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+                Log.d("x", f.getAbsolutePath());
 			}
 			Intent longClickIntent = new Intent();
 			longClickIntent.putExtra("fileName", f.getAbsolutePath());
 			longClickIntent.setClass(SDResurce.this, ResurceDetails.class);
 			startActivityForResult(longClickIntent, 0);
-
 			return true;
 		}
 	};
 
 	public void backEvent() {
 		temp = SDpath.getAbsolutePath();
-		Log.d("x", temp + "back key itemText");
-		if (temp.equals("/mnt/sdcard")) {
+		Log.d("Back key pressed: ", temp);
+		if (temp.equals("/mnt/sdcard")) {   //这里改成什么就好了呢？调试看一下就知道啦！哈哈哈我好聪明
 			finish();
 		}
 		int lastFd = temp.lastIndexOf("/");
 		if (lastFd == -1) {
-			Log.d("x", " failed to index");
+			Log.d("Back key pressed: ", " Failed to index");
 		}
-		temp = temp.substring(0, lastFd);
+		temp = temp.substring(0, lastFd);   //将SDPath设置为更高一级的目录
 		SDpath = new File(temp);
 		reFleshView(SDpath);
 	}
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
+        //设置按下返回键时的动作
 		backEvent();
-//		super.onBackPressed();
 	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //创建菜单
+        //创建菜单，能否改成滑动出现的？
 		getMenuInflater().inflate(R.menu.sd_resource_menu, menu);
 		return true;
     }
@@ -287,8 +271,7 @@ public class SDResurce extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 			case R.id.sdcard_state:
-				Intent sdCardState = new Intent();
-				sdCardState.setClass(SDResurce.this, SDCardStat.class);
+				Intent sdCardState = new Intent(SDResurce.this, SDCardStat.class);
 				startActivity(sdCardState);
 				break;
 			case R.id.escape:
@@ -301,9 +284,7 @@ public class SDResurce extends BaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (resultCode) {
 		case 1:
-			reFleshView(SDpath);
-			break;
-		case 2:
+        case 2:
 			reFleshView(SDpath);
 			break;
 		default:
@@ -311,14 +292,9 @@ public class SDResurce extends BaseActivity {
 		}
 	}
 	
-	
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		
 		super.onDestroy();
 		System.exit(0);
 	}
-
-
 }

@@ -10,87 +10,52 @@ import android.util.Log;
 
 public class FileUtil {
 
-	private long nFileTotalSize;
-	private long nFileFreeSize;
-	private String fileName;
-	private String filePath;
 	private String spaces = null;
 	private double space = 0;
 	private double count = 0;
 
-	public long getnFileTotalSize() {
-		return nFileTotalSize;
-	}
-
-	public void setnFileTotalSize(long nFileTotalSize) {
-		this.nFileTotalSize = nFileTotalSize;
-	}
-
-	public long getnFileFreeSize() {
-		return nFileFreeSize;
-	}
-
-	public void setnFileFreeSize(long nFileFreeSize) {
-		this.nFileFreeSize = nFileFreeSize;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
+    //递归计算目录下所有文件的体积之和
 	private void attDir(File file) throws IOException {
-		// TODO Auto-generated method stub
-
 		if (file.isHidden()) {
 			return;
 		}
-		File[] liFile = file.listFiles();
+		File[] liFile = file.listFiles();	//返回file下的文件列表
 		for (File nFile : liFile) {
 			if (nFile.isFile()) {
-				attFile(nFile);
+				attFile(nFile, 1);
 				count += space;
-				// System.out.println(count);
 			} else {
 				attDir(nFile);
 			}
 		}
-
 	}
 
-	private void attFile(File file) throws IOException {
+    //requestCode=0：设置spaces；request=1： 不设置spaces
+	private void attFile(File file, int requestCode) throws IOException {
 		// TODO Auto-generated method stub
 		FileInputStream fi = new FileInputStream(file);
-		space = fi.available();
-		if (space > 1048576) {
-			spaces = String.valueOf(space / 1048576).substring(0,
-					String.valueOf(space / 1048576).lastIndexOf(".") + 4)
-					+ "MB";
-		} else {
-			spaces = String.valueOf(space / 1024).substring(0,
-					String.valueOf(space / 1024).lastIndexOf(".") + 2)
-					+ "KB";
-		}
+		space = fi.available();	//返回文件所占字节数
+		Log.d("attFile", String.valueOf(space));
+		if (requestCode==0) {
+            if (space > 1048576) {
+                spaces = String.valueOf(space / 1048576).substring(0,
+                        String.valueOf(space / 1048576).lastIndexOf(".") + 4)
+                        + "MB"; //如果是MB就显示xxxx.xxxMB
+            } else {
+                spaces = String.valueOf(space / 1024).substring(0,
+                        String.valueOf(space / 1024).lastIndexOf(".") + 2)
+                        + "KB"; //如果是KB就显示xxxx.xKB
+            }
+        }
 	}
 
 	public String getSize(File file) {
+        //获取【当前】文件/文件夹的体积大小
 		String temp;
 		if (file.isFile()) {
 			try {
-				attFile(file);
+				attFile(file, 0);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			temp = spaces;
@@ -98,77 +63,63 @@ public class FileUtil {
 			try {
 				attDir(file);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (count > 1048576) {
 				temp = String.valueOf(count / 1048576).substring(0,
 						String.valueOf(count / 1048576).lastIndexOf(".") + 4)
-						+ "MB";
+						+ "MB";  //如果是MB就显示xxxx.xxxMB
 			} else {
 				temp = String.valueOf(count / 1024).substring(0,
 						String.valueOf(count / 1024).lastIndexOf(".") + 2)
-						+ "KB";
+						+ "KB"; //如果是KB就显示xxxx.xKB
 			}
 		}
 		return temp;
 	}
 
-	public ArrayList<HashMap<String, Object>> getFileDetails(File file) {
+	public ArrayList<HashMap<String, Object>> getFileDetails(File file) {   //貌似也可以写成静态方法？
 
-		ArrayList<HashMap<String, Object>> lstDetails = new ArrayList<HashMap<String, Object>>();
+		ArrayList<HashMap<String, Object>> lstDetails = new ArrayList<>();
 		String temp;
-
-		HashMap<String, Object> map1 = new HashMap<String, Object>();
+        HashMap<String, Object> map;
+		map = new HashMap<>();
 		temp = file.getName();
-		setFileName(temp);
-		map1.put("list", "Name : ");
-		map1.put("source", temp);
+		map.put("list", "名称："); //获取文件名称
+		map.put("source", temp);
+        lstDetails.add(map);
 
-		HashMap<String, Object> map2 = new HashMap<String, Object>();
+        map = new HashMap<>();
 		temp = file.getAbsolutePath();
-		setFilePath(temp);
-		map2.put("list", "Locattion : ");
-		map2.put("source", temp);
+		map.put("list", "位置："); //获取文件位置
+		map.put("source", temp);
+        lstDetails.add(map);
 
-		HashMap<String, Object> map3 = new HashMap<String, Object>();
-		temp = file.getAbsolutePath();
+		map = new HashMap<>();
+		map.put("list", "大小：");
+		temp = getSize(file);   //获取文件大小
+		map.put("source", temp);
+        lstDetails.add(map);
 
-		map3.put("list", "Size : ");
+		map = new HashMap<>();
+		map.put("list", "Readable : ");
+		map.put("source", file.canRead() ? "yes" : "no");   //获取文件是否可读
+        lstDetails.add(map);
 
-		temp = getSize(file);
+		map = new HashMap<>();
+		map.put("list", "Writeable : ");
+		map.put("source", file.canWrite() ? "yes" : "no");  //获取文件是否可写
+        lstDetails.add(map);
 
-		map3.put("source", temp);
+		map = new HashMap<>();
+		map.put("list", "Hidden : ");
+		map.put("source", file.isHidden() ? "yes" : "no");  //获取文件是否隐藏
+        lstDetails.add(map);
 
-		HashMap<String, Object> map4 = new HashMap<String, Object>();
-
-		map4.put("list", "Readable : ");
-		map4.put("source", file.canRead() ? "yes" : "no");
-
-		HashMap<String, Object> map5 = new HashMap<String, Object>();
-
-		map5.put("list", "Writeable : ");
-		map5.put("source", file.canWrite() ? "yes" : "no");
-
-		HashMap<String, Object> map6 = new HashMap<String, Object>();
-
-		map6.put("list", "Hidden : ");
-		map6.put("source", file.isHidden() ? "yes" : "no");
-
-		HashMap<String, Object> map7 = new HashMap<String, Object>();
-
-		map7.put("list", "Type : ");
-		map7.put("source", file.isFile() ? "File" : "Directory");
-
-		lstDetails.add(map1);
-		lstDetails.add(map2);
-		if(!file.isHidden()){
-			lstDetails.add(map3);
-		}
-		lstDetails.add(map7);
-		lstDetails.add(map4);
-		lstDetails.add(map5);
-		lstDetails.add(map6);
+		map = new HashMap<>();
+		map.put("list", "Type : ");
+		map.put("source", file.isFile() ? "File" : "Directory");    //获取文件是否是文件（还是目录）
+        lstDetails.add(map);
 
 		return lstDetails;
 	}

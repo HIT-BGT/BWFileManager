@@ -3,52 +3,44 @@ package com.app.sdfile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.EditText;
-
 import com.app.SDManeger.R;
-import com.app.SDManeger.ResurceDetails;
 
 public class SDFile {
 
 	public ArrayList<HashMap<String, Object>> getFileList(File path) {
-
-		ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
+		//申请一个数组用来装每个文件
+		ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<>();
 		HashMap<String, Object> map;
 		String temp;
-		int i = 0;
-
+		int i;
+        //如果path不存在或者不可读或者不是目录
 		if (!path.exists() && !path.canRead() && !path.isDirectory()) {
 			return lstImageItem;
 		}
+        //如果path下没有文件
 		if (path.list() == null) {
 			return lstImageItem;
 		}
+        //如果path被隐藏了
 		if (path.isHidden()) {
 			path.setReadable(true);
-
 		}
-		temp = path.getName();
+		temp = path.getName(); //获得path名称
 		if (temp.startsWith(".")) {
-			temp = temp.substring(1, temp.length());
+			temp = temp.substring(1, temp.length());    //去掉'.'
 			i = path.getAbsoluteFile().toString().lastIndexOf("/");
 			temp = path.getAbsolutePath().substring(0, i) + File.separator
 					+ temp;
-			path.renameTo(new File(temp));
+			path.renameTo(new File(temp));  //重命名？
 			Log.d("x", "int sub");
 		}
 		for (File f : path.listFiles()) {
 			temp = f.getName();
-			map = new HashMap<String, Object>();
-			if (f.isDirectory()) {
+			map = new HashMap<>();
+			if (f.isDirectory()) {  //将文件的图片放进map里
 				map.put("ItemImage", R.drawable.filefolder1);
 			} else if (f.isFile() && temp.endsWith(".pdf")) {
 				map.put("ItemImage", R.drawable.pdf);
@@ -59,21 +51,20 @@ public class SDFile {
 			}else if (f.isFile()) {
 				map.put("ItemImage", R.drawable.file1);
 			}
-			map.put("ItemText", f.getName());
+			map.put("ItemText", f.getName());   //将文件名放入map里
 			lstImageItem.add(map);
 		}
-
 		return lstImageItem;
 	}
 
-	public Intent openFile(File file) {
-
+	//打开文件
+	public Intent openFile(File file) {	//返回一个intent可以用在startActivity里
 		Intent intent = new Intent();
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);    //新建一个task
 		intent.setAction(Intent.ACTION_VIEW);
 		String type = getMIMEType(file);
 		intent.setDataAndType(Uri.fromFile(file), type);
-		return intent;
+		return intent;	//在使用intent时最好try一下
 	}
 
 	/**
@@ -81,22 +72,24 @@ public class SDFile {
 	 */
 	private String getMIMEType(File file) {
 
-		String type = "*/*";
+		String type = "*/*";    //为什么要返回这个呢?
 		String fName = file.getName();
-		int dotIndex = fName.lastIndexOf(".");
+		int dotIndex = fName.lastIndexOf(".");	//获取后缀名前的分隔符"."在fName中的位置
 		if (dotIndex < 0) {
 			return type;
 		}
+        //获取文件的后缀名
 		String end = fName.substring(dotIndex, fName.length()).toLowerCase();
-		if (end == "")
+		if (end.equals("") )
 			return type;
-		for (int i = 0; i < MIME_MapTable.length; i++) {
-			if (end.equals(MIME_MapTable[i][0]))
-				type = MIME_MapTable[i][1];
-		}
+        for (String[] mime_type : MIME_MapTable){
+            if (end.equals(mime_type[0])){
+                type = mime_type[1];
+            }
+        }
 		return type;
 	}
-
+      //MIMEType 映射表（是否可以改写成HashMap?）
       private final String[][] MIME_MapTable = {
 			{ ".3gp", "video/3gpp"},
 			{ ".apk", "application/vnd.android.package-archive" },
@@ -164,12 +157,10 @@ public class SDFile {
 
 	public ArrayList<HashMap<String, Object>> getSearchList(File path,
 			String str) {
-		ArrayList<HashMap<String, Object>> lst;
 
-		ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
+		ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<>();
 		HashMap<String, Object> map;
 		String temp;
-		int i = 0;
 
 		if (!path.exists() && !path.canRead() && !path.isDirectory()) {
 			return lstImageItem;
@@ -180,11 +171,11 @@ public class SDFile {
 		if (path.isHidden()) {
 			path.setReadable(true);
 		}
-
 		for (File f : path.listFiles()) {
 			temp = f.getName();
-			if (temp.indexOf(str) != -1) {
+			if (temp.contains(str)) {
 				map = new HashMap<String, Object>();
+
 				if (f.isDirectory()) {
 					map.put("ItemImage", R.drawable.filefolder1);
 				} else if (f.isFile()&& temp.endsWith(".html")) {
@@ -200,9 +191,6 @@ public class SDFile {
 				lstImageItem.add(map);
 			}
 		}
-
 		return lstImageItem;
-
 	}
-
 }

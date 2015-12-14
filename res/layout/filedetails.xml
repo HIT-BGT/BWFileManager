@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
-        android:text="The stat of the SDCARD" />
+        android:text="SD卡状态" />
 
     <ProgressBar
         android:id="@+id/progressBar1"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
-        android:text="Avaliable Size of SDcard : " />
+        android:text="剩余大小：" />
     
     <TextView
         android:id="@+id/asizen"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
-        android:text="Total Size of SDCard : " />
+        android:text="总大小：" />
 
         <TextView
         android:id="@+id/tsizen"
@@ -46,6 +46,4 @@
         android:layout_height="wrap_content"
         android:textSize="25dp"
         android:text="000" />
-   
-
 </LinearLayout>
