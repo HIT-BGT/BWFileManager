@@ -102,23 +102,23 @@ public class FileUtil {
         lstDetails.add(map);
 
 		map = new HashMap<>();
-		map.put("list", "Readable : ");
-		map.put("source", file.canRead() ? "yes" : "no");   //获取文件是否可读
+		map.put("list", "是否可读：");
+		map.put("source", file.canRead() ? "是" : "否");   //获取文件是否可读
         lstDetails.add(map);
 
 		map = new HashMap<>();
-		map.put("list", "Writeable : ");
-		map.put("source", file.canWrite() ? "yes" : "no");  //获取文件是否可写
+		map.put("list", "是否可写：");
+		map.put("source", file.canWrite() ? "是" : "否");  //获取文件是否可写
         lstDetails.add(map);
 
 		map = new HashMap<>();
-		map.put("list", "Hidden : ");
-		map.put("source", file.isHidden() ? "yes" : "no");  //获取文件是否隐藏
+		map.put("list", "是否隐藏：");
+		map.put("source", file.isHidden() ? "是" : "否");  //获取文件是否隐藏
         lstDetails.add(map);
 
 		map = new HashMap<>();
-		map.put("list", "Type : ");
-		map.put("source", file.isFile() ? "File" : "Directory");    //获取文件是否是文件（还是目录）
+		map.put("list", "类型：");
+		map.put("source", file.isFile() ? "文件" : "目录");    //获取文件是否是文件（还是目录）
         lstDetails.add(map);
 
 		return lstDetails;

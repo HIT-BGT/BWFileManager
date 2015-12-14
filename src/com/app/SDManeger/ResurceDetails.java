@@ -15,13 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import com.app.sdfile.FileUtil;
 
@@ -41,11 +36,11 @@ public class ResurceDetails extends BaseActivity{
 		if(!file.exists()){
 			return;
 		}
+        setContentView(R.layout.resourcedetails_layout);
 		fileUtil = new FileUtil();
-		listView = new ListView(this);
+		listView = (ListView) findViewById(R.id.resourcedetails_lst);
 		listView.setAdapter(new ArrayAdapter<>(this,
 				android.R.layout.simple_expandable_list_item_1, getData()));
-		setContentView(listView);
 		listView.setOnItemClickListener(new ListItemListentener());
 	}
 

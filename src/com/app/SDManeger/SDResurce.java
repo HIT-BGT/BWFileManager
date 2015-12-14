@@ -121,8 +121,8 @@ public class SDResurce extends BaseActivity {
 	private void createDialog() {
 		//创建create时的对话框
 		AlertDialog.Builder builder = new Builder(this);
-        builder.setTitle("提示");
-		builder.setMessage("创建");
+        builder.setTitle("创建");
+		builder.setMessage("请选择要创建的类型：");
 		builder.setPositiveButton("文件", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -166,6 +166,7 @@ public class SDResurce extends BaseActivity {
         //创建搜索对话框
 		AlertDialog.Builder builder = new Builder(SDResurce.this);
 		final EditText editText = new EditText(SDResurce.this);
+        builder.setTitle("搜索");
 		builder.setMessage("请输入关键字：");
 		builder.setView(editText);
 		builder.setPositiveButton("确认", new OnClickListener() {
