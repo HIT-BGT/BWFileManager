@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.os.Environment;
 import android.util.Log;
 
 public class FileUtil {
@@ -124,4 +125,7 @@ public class FileUtil {
 		return lstDetails;
 	}
 
+	public static String getSdDirectory() {
+		return Environment.getExternalStorageDirectory().getPath();
+	}
 }

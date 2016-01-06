@@ -6,7 +6,7 @@ import java.util.HashMap;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import com.app.SDManeger.R;
+import com.app.SDManager.R;
 
 public class SDFile {
 
@@ -41,14 +41,20 @@ public class SDFile {
 			temp = f.getName();
 			map = new HashMap<>();
 			if (f.isDirectory()) {  //将文件的图片放进map里
-				map.put("ItemImage", R.drawable.filefolder1);
+				map.put("ItemImage", R.drawable.folder);
+            } else if (f.isFile() && temp.endsWith(".amr")||(temp.endsWith(".mp3"))) {
+                map.put("ItemImage", R.drawable.mp3);
+            } else if (f.isFile() && (temp.endsWith(".doc")||temp.endsWith(".docx"))) {
+                map.put("ItemImage", R.drawable.doc);
+            } else if (f.isFile() && (temp.endsWith(".jpg")||temp.endsWith(".jpeg"))) {
+                map.put("ItemImage", R.drawable.jpg);
 			} else if (f.isFile() && temp.endsWith(".pdf")) {
 				map.put("ItemImage", R.drawable.pdf);
-			} else if (f.isFile() && temp.endsWith(".mp3")) {
-				map.put("ItemImage", R.drawable.mp3);
-			} else if (f.isFile() && temp.endsWith(".txt")) {
+            } else if (f.isFile() && (temp.endsWith(".ppt")||temp.endsWith(".pptx"))) {
+                map.put("ItemImage", R.drawable.ppt);
+			} else if (f.isFile() && (temp.endsWith(".txt")||temp.endsWith(".lrc"))) {
 				map.put("ItemImage", R.drawable.txt);
-			}else if (f.isFile()) {
+			}else{
 				map.put("ItemImage", R.drawable.file1);
 			}
 			map.put("ItemText", f.getName());   //将文件名放入map里
@@ -175,18 +181,23 @@ public class SDFile {
 			temp = f.getName();
 			if (temp.contains(str)) {
 				map = new HashMap<String, Object>();
-
-				if (f.isDirectory()) {
-					map.put("ItemImage", R.drawable.filefolder1);
-				} else if (f.isFile()&& temp.endsWith(".html")) {
-					map.put("ItemImage", R.drawable.html);
-				} else if (f.isFile() && temp.endsWith(".mp3")) {
-					map.put("ItemImage", R.drawable.mp3);
-				} else if (f.isFile() && temp.endsWith(".txt")) {
-					map.put("ItemImage", R.drawable.txt);
-				}else if(f.isFile()){
-					map.put("ItemImage", R.drawable.file1);
-				}
+                if (f.isDirectory()) {  //将文件的图片放进map里
+                    map.put("ItemImage", R.drawable.folder);
+                } else if (f.isFile() && temp.endsWith(".amr")||(temp.endsWith(".mp3"))) {
+                    map.put("ItemImage", R.drawable.mp3);
+                } else if (f.isFile() && (temp.endsWith(".doc")||temp.endsWith(".docx"))) {
+                    map.put("ItemImage", R.drawable.doc);
+                } else if (f.isFile() && (temp.endsWith(".jpg")||temp.endsWith(".jpeg"))) {
+                    map.put("ItemImage", R.drawable.jpg);
+                } else if (f.isFile() && temp.endsWith(".pdf")) {
+                    map.put("ItemImage", R.drawable.pdf);
+                } else if (f.isFile() && (temp.endsWith(".ppt")||temp.endsWith(".pptx"))) {
+                    map.put("ItemImage", R.drawable.ppt);
+                } else if (f.isFile() && (temp.endsWith(".txt")||temp.endsWith(".lrc"))) {
+                    map.put("ItemImage", R.drawable.txt);
+                }else{
+                    map.put("ItemImage", R.drawable.file1);
+                }
 				map.put("ItemText", f.getName());
 				lstImageItem.add(map);
 			}

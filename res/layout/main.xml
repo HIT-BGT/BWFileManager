@@ -13,22 +13,24 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="创建" />
-    <Button
-        android:id="@+id/button2"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:text="搜索" />
 
     <Button
         android:id="@+id/button3"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="刷新" />
+        <Button
+                android:id="@+id/button4"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/ftp" />
     </TableRow>
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/gridview"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_marginTop="5dp"
+              android:layout_marginBottom="5dp"
               android:layout_alignParentTop="true"
               android:layout_above="@id/table_layout"
               android:numColumns="auto_fit"

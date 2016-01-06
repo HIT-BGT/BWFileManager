@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BWFileManager.iml" filepath="$PROJECT_DIR$/BWFileManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BWFileManeger.iml" filepath="$PROJECT_DIR$/BWFileManeger.iml" />
     </modules>
   </component>
 </project>
