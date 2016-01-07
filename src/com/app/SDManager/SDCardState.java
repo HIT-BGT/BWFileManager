@@ -1,6 +1,11 @@
 package com.app.SDManager;
 
+import android.app.ActionBar;
+import android.app.TaskStackBuilder;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,7 +23,6 @@ public class SDCardState extends BaseActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);	//不显示标题
 		setContentView(R.layout.filedetails);
 
 		aSize = (TextView)findViewById(R.id.asizen);	//可用大小
@@ -27,10 +31,30 @@ public class SDCardState extends BaseActivity{
 		progressBar.setMax(100);
 		sdCheck = new SDCardCheck();
 		putSDCardContext();
-		
+		ActionBar actionBar = getActionBar();   //获得位于顶部的ActionBar
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    TaskStackBuilder.create(this)
+                            .addNextIntentWithParentStack(upIntent)
+                            .startActivities();
+                } else {
+                    upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
 
-	public void putSDCardContext(){
+
+    public void putSDCardContext(){
 		sdCheck.SDCardSize();	//在SDCardCheck类中用于设置nSDTotalSize和nSDFreeSize
 		long nFreeSize = sdCheck.getnSDFreeSize();  //获取剩余空间
 		long nTotalSize = sdCheck.getnSDTotalSize();    //获取总空间

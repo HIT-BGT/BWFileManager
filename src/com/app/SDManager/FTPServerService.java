@@ -232,7 +232,7 @@ public class FTPServerService extends Service implements Runnable {
         int icon = R.drawable.notification;
         CharSequence tickerText = getString(R.string.notif_server_starting);
         long when = System.currentTimeMillis();
-        Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(icon).setTicker(tickerText).setWhen(when).getNotification();
+        Notification notification = new Notification.Builder(getApplicationContext()).setSmallIcon(icon).setTicker(tickerText).setWhen(when).build();
 
         // Define Notification's message and Intent
         CharSequence contentTitle = getString(R.string.notif_title);
@@ -243,7 +243,7 @@ public class FTPServerService extends Service implements Runnable {
             contentText = "ftp://" + address.getHostAddress() + (FTPServerService.getPort() == 21 ? "" : port);
         }
 
-        Intent notificationIntent = new Intent(this, BaseActivity.class);
+        Intent notificationIntent = new Intent(this, ServerControlActivity.class);
         //notificationIntent.putExtra(GlobalConsts.INTENT_EXTRA_TAB, 2);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         notification.setLatestEventInfo(getApplicationContext(), contentTitle, contentText, contentIntent);

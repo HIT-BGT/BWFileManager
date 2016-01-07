@@ -3,6 +3,7 @@
 
     <string name="app_name">BW文件管理器</string>
     <string name="ftp">远程管理</string>
+    <string name="SDstate">查看SD卡状态</string>
     <string name="action_search">搜索</string>
     <string name="notif_title">远程管理服务正在运行</string>
     <string name="notif_server_starting">远程管理服务已启动</string>
