@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -11,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,11 +30,10 @@ public class SDResource extends BaseActivity implements SearchView.OnQueryTextLi
 	String temp;
 	ArrayList<HashMap<String, Object>> lstImageItem;
 	private GridView gridview;
-	private Button creat;
-	private Button back;
-	private Button ftp;
     private MenuItem searchItem;
     private SearchView searchView;
+    private DrawerLayout drawerLayout;
+	private ListView drawerList;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +43,13 @@ public class SDResource extends BaseActivity implements SearchView.OnQueryTextLi
 		gridview = (GridView) findViewById(R.id.gridview);
 		gridview.setOnItemClickListener(mGridViewItemClickListener);	//给grid中的每个item注册一个listener
 		gridview.setOnItemLongClickListener(mGridViewItemLongClickListener); //给grid中的每个item注册一个长时间按的listener
-		creat = (Button) findViewById(R.id.button1);
-		back = (Button) findViewById(R.id.button3);
-		ftp = (Button) findViewById(R.id.button4);
-
-		creat.setOnClickListener(new CreateListener());
-		back.setOnClickListener(new FlashListener());
-		ftp.setOnClickListener(new FtpListener());
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        SimpleAdapter listAdapter = new SimpleAdapter(this, getData(), R.layout.sliding_item,
+                new String[]{"img", "text"},
+                new int[]{R.id.img, R.id.text});
+        drawerList.setAdapter(listAdapter);
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		sdCardCheck = new SDCardCheck();
 		sdFile = new SDFile();
@@ -56,7 +58,42 @@ public class SDResource extends BaseActivity implements SearchView.OnQueryTextLi
         Log.d("SDResource#onCreate", SDpath.getAbsolutePath());
 		reFleshView(SDpath);
 	}
+    //获得侧边菜单栏数据
+    private List<Map<String, Object>> getData() {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("text", "创建");
+        map.put("img", R.drawable.create);
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("text", "刷新");
+        map.put("img", R.drawable.delete);
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("text", "远程管理");
+        map.put("img", R.drawable.wifi);
+        list.add(map);
+
+        return list;
+    }
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            if (position==0){
+                createDialog();
+            }else if(position==1){
+                reFleshView(SDpath);
+            }else if(position==2){
+                Intent intent = new Intent(SDResource.this, ServerControlActivity.class);
+                startActivity(intent);
+                Log.d("x", "in FTP");
+            }
+            drawerLayout.closeDrawer(drawerList);
+        }
+    }
 	//得到view
 	private void reFleshView(File filePath) {
 		if (filePath != null) {
@@ -135,36 +172,6 @@ public class SDResource extends BaseActivity implements SearchView.OnQueryTextLi
 			}
 		});
 		builder.create().show();
-	}
-
-	private class CreateListener implements View.OnClickListener {
-		//注册在”创建“按钮上的listener
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			Log.d("x", "in two");
-			createDialog();
-		}
-	}
-
-	private class FlashListener implements android.view.View.OnClickListener {
-        //注册在”刷新“按钮上的listener
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			Log.d("x", "in two");
-			reFleshView(SDpath);
-		}
-	}
-	private class FtpListener implements android.view.View.OnClickListener {
-		//注册在”FTP“按钮上的listener
-		@Override
-		public void onClick(View v) {
-
-			Intent intent = new Intent(SDResource.this, ServerControlActivity.class);
-			startActivity(intent);
-			Log.d("x", "in FTP");
-		}
 	}
 
 	private GridView.OnItemClickListener mGridViewItemClickListener = new GridView.OnItemClickListener() {
